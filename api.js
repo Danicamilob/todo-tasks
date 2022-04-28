@@ -2,7 +2,24 @@ var mongoose = require("mongoose");
 var express = require("express");
 var router = express.Router();
 var TaskModel = require('./task_schema');
-var query = "mongodb+srv://DanielB:1088597233@cluster0.dvaa3.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
+
+let environment = null;
+
+if (!process.env.ON_HEROKU) {
+    console.log("Cargando variables de entorno desde archivo");
+    const env = require('node-env-file');
+    env(__dirname + '/.env');
+}
+
+environment = {
+    DBMONGOUSER: process.env.DBMONGOUSER,
+    DBMONGOPASS: process.env.DBMONGOPASS,
+    DBMONGOSERV: process.env.DBMONGOSERV,
+    DBMONGO: process.env.DBMONGO,
+};
+
+var query = 'mongodb+srv://' + environment.DBMONGOUSER + ':' + environment.DBMONGOPASS + '@' + environment.DBMONGOSERV + '/' + environment.DBMONGO + '?retryWrites=true&w=majority';
+
 const db = (query);
 
 mongoose.Promise = global.Promise;
